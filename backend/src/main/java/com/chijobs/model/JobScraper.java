@@ -61,7 +61,7 @@ public class JobScraper {
     }
 
     private String fetch_f_E(String position) {
-        if (position == null) return null;
+        if (position == "") return null;
         Map<String, String> positions = new HashMap<>();
         positions.put("internship", "1");
         positions.put("junior", "2,3,4");
