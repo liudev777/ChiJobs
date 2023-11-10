@@ -7,29 +7,53 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.chijobs.model.JobScraper;
 import com.chijobs.model.FileManager;
 import com.chijobs.model.IndeedScrapper;
+import com.chijobs.database.MySQLDatabase;
 
 
 @SpringBootApplication
 public class ChiJobsApplication {
 
+
+    /*
+     * NOTES: database searching only for non-zipcode local searches. 
+     * Zipcode local searches requires realtime everytime.
+     */
+
+     /*
+      * TODO: 
+      check db for query first, if it exists and time is not past 24 hours
+      return the result from db, else, make a scrape.
+      */
 	public static void main(String[] args) {
 		SpringApplication.run(ChiJobsApplication.class, args);
 
-        // runLinkedinScraper();
         System.out.println("Running ChiJobsApplication!");
-        runIndeedScraper("Software Engineer", "60666");
-
-        // try {
-        //     IndeedScrapper is = new IndeedScrapper();
-        //     is.checkHtml("https://www.indeed.com/jobs?q=software+developer&l=60616&radius=5");
-        // } catch (Exception e) {
-        //     System.out.println(e);
-        // }
-
-
+        runIndeedScraper("Concept Artist", "60616");
 	
 	}
 
+
+    // this will be the main scraper ChiJob app will use
+    // run scraper and save output to /output
+    public static void runIndeedScraper(String keywords, String zipCode) {
+        IndeedScrapper scraper = new IndeedScrapper();
+        FileManager fm = new FileManager();
+
+        try {
+            Map<String, Map<String, String>> jobList = scraper.getJobList(keywords, zipCode);
+            
+            MySQLDatabase.handleJobSQL(keywords, jobList);
+            String filename = fm.generateFilename(keywords, zipCode, null) + ".csv";
+            
+            fm.saveToCSV(jobList, filename); // uncomment to save to /output
+        } catch (Exception e) {
+            System.out.println("Something went wrong when running runIndeedScraper: ");
+            System.out.println(e);
+        }
+    }
+
+
+    // linkedin scraping
     public static void runLinkedinScraper() {
         JobScraper scraper = new JobScraper();
         FileManager fm = new FileManager();
@@ -45,19 +69,6 @@ public class ChiJobsApplication {
             e.printStackTrace();
         }
     }
-
-
-    public static void runIndeedScraper(String keywords, String zipCode) {
-        IndeedScrapper scraper = new IndeedScrapper();
-        FileManager fm = new FileManager();
-        try {
-            Map<String, Map<String, String>> jobList = scraper.getJobList(keywords, zipCode);
-            String filename = fm.generateFilename(keywords, zipCode, null) + ".csv";
-            fm.saveToCSV(jobList, filename);
-        } catch (Exception e) {
-            System.out.println("Something went wrong when running runIndeedScraper: ");
-            System.out.println(e);
-        }
-    }
+    
 
 }

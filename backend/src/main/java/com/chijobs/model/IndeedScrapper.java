@@ -8,22 +8,12 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import org.openqa.selenium.Proxy;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import io.github.cdimascio.dotenv.Dotenv;
-import com.chijobs.model.FileManager;
 
 @Service
 public class IndeedScrapper {
@@ -48,18 +38,24 @@ public class IndeedScrapper {
     // given html, parses the html page for tags and return job desc
     public Map<String, Map<String, String>> scrapeJobDetails(String html) {
         Document document = Jsoup.parse(html);
+
+        // every job listing is separated by this tag:
         Elements jobItems = document.select("li.css-5lfssm.eu4oa1w0");
         Map<String, Map<String, String>> jobs = new HashMap<>();
 
         // tag parsing logic
-        // System.out.println("scrapeJobDetails called");
         for (Element jobItem : jobItems) {
             Element linkElement = jobItem.select("h2.jobTitle > a").first();
             if (linkElement != null) {
 
                 String jobId = linkElement.attr("data-jk");
-
+                
                 Map<String, String> jobDetails = new HashMap<>();
+
+                if (jobId != null) {
+                    jobDetails.put("jobId", jobId);
+                }
+
                 jobDetails.put("title", linkElement.text()); 
 
                 Element companyElement = jobItem.select("[data-testid=company-name]").first();
@@ -80,7 +76,6 @@ public class IndeedScrapper {
                 jobs.put(String.format("https://www.indeed.com/viewjob?jk=%s", jobId), jobDetails);
             }
         }
-
         return jobs;
     }
     
@@ -92,8 +87,19 @@ public class IndeedScrapper {
         String chromeDriverPath = dotenv.get("WEBDRIVER_CHROME_DRIVER");
         System.setProperty("webdriver.chrome.driver", chromeDriverPath);
 
-        // Configure Chrome to run in headless mode
+        String proxyHost = dotenv.get("PROXY_HOST");
+        String proxyPort = dotenv.get("PROXY_PORT");
+        
+        // use proxie if defined in .env
         ChromeOptions options = new ChromeOptions();
+        if (proxyHost != null && proxyPort != null) {
+            Proxy proxy = new Proxy();
+            proxy.setHttpProxy(proxyHost + ":" + proxyPort);
+            proxy.setSslProxy(proxyHost + ":" + proxyPort);
+            options.setCapability("proxy", proxy);
+        }
+
+        // Configure Chrome to run in headless mode
         options.addArguments("--headless");
         options.addArguments("--disable-gpu");
         options.addArguments("--window-size=1920,1080");
@@ -110,9 +116,12 @@ public class IndeedScrapper {
             String pageSource = driver.getPageSource();
 
             return (pageSource);
+        } catch (Exception e) {
+            System.out.println(String.format("Selenium Error: %s", e));
+            return null;
         } finally {
             // Close the browser
-            driver.quit();
+            // driver.quit();
         }
     }
 
