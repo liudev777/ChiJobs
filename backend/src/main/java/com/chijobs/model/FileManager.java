@@ -12,6 +12,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Service;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -55,7 +57,9 @@ public class FileManager {
     // Uses selenium to get dynamic webpage and save html file
     public void saveHtmlToFile(String url, String filePath) throws IOException{
         // Set the path to the chromedriver executable
-        System.setProperty("webdriver.chrome.driver", "/opt/homebrew/bin/chromedriver");
+        Dotenv dotenv = Dotenv.load();
+        String chromeDriverPath = dotenv.get("WEBDRIVER_CHROME_DRIVER");
+        System.setProperty("webdriver.chrome.driver", chromeDriverPath);
 
         // Configure Chrome to run in headless mode
         ChromeOptions options = new ChromeOptions();

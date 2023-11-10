@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import io.github.cdimascio.dotenv.Dotenv;
 import com.chijobs.model.FileManager;
 
 @Service
@@ -48,10 +48,11 @@ public class IndeedScrapper {
     // given html, parses the html page for tags and return job desc
     public Map<String, Map<String, String>> scrapeJobDetails(String html) {
         Document document = Jsoup.parse(html);
-        Elements jobItems = document.select("li.css-5lfssm");
+        Elements jobItems = document.select("li.css-5lfssm.eu4oa1w0");
         Map<String, Map<String, String>> jobs = new HashMap<>();
 
         // tag parsing logic
+        // System.out.println("scrapeJobDetails called");
         for (Element jobItem : jobItems) {
             Element linkElement = jobItem.select("h2.jobTitle > a").first();
             if (linkElement != null) {
@@ -87,7 +88,9 @@ public class IndeedScrapper {
     // takes in indeed url and returns webpage html content
     public String getHtmlFromUrl(String url) throws IOException{
         // Set the path to the chromedriver executable
-        System.setProperty("webdriver.chrome.driver", "/opt/homebrew/bin/chromedriver");
+        Dotenv dotenv = Dotenv.load();
+        String chromeDriverPath = dotenv.get("WEBDRIVER_CHROME_DRIVER");
+        System.setProperty("webdriver.chrome.driver", chromeDriverPath);
 
         // Configure Chrome to run in headless mode
         ChromeOptions options = new ChromeOptions();
