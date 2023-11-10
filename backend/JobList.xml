@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<Jobs>
+    <Job>
+        <Title>Software Developer</Title>
+    </Job>
+    <Job>
+        <Title>Registered Nurse</Title>
+    </Job>
+    <Job>
+        <Title>Systems Analyst</Title>
+    </Job>
+    <Job>
+        <Title>Teacher</Title>
+    </Job>
+    <Job>
+        <Title>Accountant</Title>
+    </Job>
+    <Job>
+        <Title>Project Manager</Title>
+    </Job>
+    <Job>
+        <Title>Operations Manager</Title>
+    </Job>
+    <Job>
+        <Title>IT Manager</Title>
+    </Job>
+    <Job>
+        <Title>Human Resources Manager</Title>
+    </Job>
+    <Job>
+        <Title>Marketing Manager</Title>
+    </Job>
+</Jobs>
