@@ -89,22 +89,24 @@ public class FileManager {
             driver.quit();
         }
     }
+    
 
     public void saveToCSV(Map<String, Map<String, String>> joblist, String filename) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("output/" + filename + ".csv"))) {
             // Writing header
-            writer.write("Link,Title,Company,Location,Description\n");
+            writer.write("Link, jobId, Title, Company, Location, Description\n");
 
             // Writing each job to the CSV
             for (Map.Entry<String, Map<String, String>> entry : joblist.entrySet()) {
                 String href = entry.getKey();
                 Map<String, String> details = entry.getValue();
+                String job_id = details.getOrDefault("jobId", "");
                 String title = details.getOrDefault("title", "");
                 String company = details.getOrDefault("company", "");
                 String location = details.getOrDefault("location", "");
                 String description = details.getOrDefault("description", "").replace("\n", " ").replace(",", ";");
 
-                writer.write(String.format("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n", href, title, company, location, description));
+                writer.write(String.format("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n", href, job_id, title, company, location, description));
             }
         }
         System.out.println("CSV file created successfully: " + filename);
