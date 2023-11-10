@@ -16,6 +16,7 @@ public class ChiJobsApplication {
 		SpringApplication.run(ChiJobsApplication.class, args);
 
         // runLinkedinScraper();
+        System.out.println("Running ChiJobsApplication!");
         runIndeedScraper("Software Engineer", "60666");
 
         // try {
@@ -54,7 +55,8 @@ public class ChiJobsApplication {
             String filename = fm.generateFilename(keywords, zipCode, null) + ".csv";
             fm.saveToCSV(jobList, filename);
         } catch (Exception e) {
-
+            System.out.println("Something went wrong when running runIndeedScraper: ");
+            System.out.println(e);
         }
     }
 
