@@ -8,6 +8,7 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.Proxy;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -92,8 +93,17 @@ public class IndeedScrapper {
         String chromeDriverPath = dotenv.get("WEBDRIVER_CHROME_DRIVER");
         System.setProperty("webdriver.chrome.driver", chromeDriverPath);
 
+
+        String proxyHost = dotenv.get("PROXY_HOST");
+        String proxyPort = dotenv.get("PROXY_PORT");
+        Proxy proxy = new Proxy();
+        proxy.setHttpProxy(proxyHost + ":" + proxyPort);
+        proxy.setSslProxy(proxyHost + ":" + proxyPort);
+
+        
         // Configure Chrome to run in headless mode
         ChromeOptions options = new ChromeOptions();
+        options.setCapability("proxy", proxy);
         options.addArguments("--headless");
         options.addArguments("--disable-gpu");
         options.addArguments("--window-size=1920,1080");
