@@ -1,4 +1,4 @@
-package com.chijobs.model;
+package com.chijobs.ChiJobs.model;
 
 import org.springframework.stereotype.Service;
 import org.jsoup.Jsoup;

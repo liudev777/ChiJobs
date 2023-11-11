@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import com.chijobs.model.JobScraper;
-import com.chijobs.model.FileManager;
-import com.chijobs.model.IndeedScrapper;
-import com.chijobs.database.MySQLDatabase;
+import com.chijobs.ChiJobs.model.JobScraper;
+import com.chijobs.ChiJobs.model.FileManager;
+import com.chijobs.ChiJobs.model.IndeedScrapper;
+import com.chijobs.ChiJobs.database.MySQLDatabase;
 
 
 @SpringBootApplication
@@ -28,7 +28,7 @@ public class ChiJobsApplication {
 		SpringApplication.run(ChiJobsApplication.class, args);
 
         System.out.println("Running ChiJobsApplication!");
-        runIndeedScraper("Concept Artist", "60616");
+        // runIndeedScraper("Concept Artist", "60616");
 	
 	}
 
