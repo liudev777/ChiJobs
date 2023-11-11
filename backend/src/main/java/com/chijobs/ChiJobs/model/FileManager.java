@@ -9,6 +9,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -102,5 +103,17 @@ public class FileManager {
         }
         System.out.println("CSV file created successfully: " + filename);
     }
+
+    public String convertToJson(Map<String, Map<String, String>> joblist) {
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonString = "";
+        try {
+            jsonString = mapper.writeValueAsString(joblist);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return jsonString;
+    }
+
 
 }

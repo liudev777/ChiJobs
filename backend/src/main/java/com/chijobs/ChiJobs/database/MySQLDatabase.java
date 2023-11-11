@@ -62,7 +62,7 @@ public class MySQLDatabase {
                         "location = VALUES(location), " +
                         "description = VALUES(description)";
     
-        String queryJobSql = "INSERT INTO query_jobs (query, job_id) VALUES (?, ?)";
+        String queryJobSql = "INSERT IGNORE INTO query_jobs (query, job_id) VALUES (?, ?)";
     
         try (Connection conn = connect();
              PreparedStatement jobStmt = conn.prepareStatement(jobSql);
