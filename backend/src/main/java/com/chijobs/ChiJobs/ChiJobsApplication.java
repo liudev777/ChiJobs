@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import com.chijobs.model.JobScraper;
-import com.chijobs.model.FileManager;
-import com.chijobs.model.IndeedScrapper;
-import com.chijobs.database.MySQLDatabase;
+import com.chijobs.ChiJobs.model.JobScraper;
+import com.chijobs.ChiJobs.model.FileManager;
+import com.chijobs.ChiJobs.model.IndeedScrapper;
+import com.chijobs.ChiJobs.database.MySQLDatabase;
 
 
 @SpringBootApplication
@@ -28,7 +28,7 @@ public class ChiJobsApplication {
 		SpringApplication.run(ChiJobsApplication.class, args);
 
         System.out.println("Running ChiJobsApplication!");
-        runIndeedScraper("Concept Artist", "60616");
+        runIndeedScraper("Mechanical Engineer", "60616");
 	
 	}
 
@@ -45,7 +45,7 @@ public class ChiJobsApplication {
             MySQLDatabase.handleJobSQL(keywords, jobList);
             String filename = fm.generateFilename(keywords, zipCode, null) + ".csv";
             
-            fm.saveToCSV(jobList, filename); // uncomment to save to /output
+            // fm.saveToCSV(jobList, filename); // uncomment to save to /output
         } catch (Exception e) {
             System.out.println("Something went wrong when running runIndeedScraper: ");
             System.out.println(e);

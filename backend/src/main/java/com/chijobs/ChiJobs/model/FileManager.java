@@ -1,25 +1,17 @@
-package com.chijobs.model;
+package com.chijobs.ChiJobs.model;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.cdimascio.dotenv.Dotenv;
-
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 
 @Service
 public class FileManager {
@@ -111,5 +103,17 @@ public class FileManager {
         }
         System.out.println("CSV file created successfully: " + filename);
     }
+
+    public String convertToJson(Map<String, Map<String, String>> joblist) {
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonString = "";
+        try {
+            jsonString = mapper.writeValueAsString(joblist);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return jsonString;
+    }
+
 
 }

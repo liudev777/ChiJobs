@@ -1,4 +1,4 @@
-package com.chijobs.model;
+package com.chijobs.ChiJobs.model;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

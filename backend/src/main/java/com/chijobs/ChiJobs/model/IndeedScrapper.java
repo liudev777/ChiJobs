@@ -1,4 +1,4 @@
-package com.chijobs.model;
+package com.chijobs.ChiJobs.model;
 
 import org.springframework.stereotype.Service;
 import org.jsoup.Jsoup;
@@ -8,12 +8,14 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.devtools.v116.io.IO;
 import org.openqa.selenium.Proxy;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import io.github.cdimascio.dotenv.Dotenv;
+import com.chijobs.ChiJobs.model.FileManager;
 
 @Service
 public class IndeedScrapper {
@@ -25,6 +27,19 @@ public class IndeedScrapper {
         
         String html = getHtmlFromUrl(url); // uses selenium to convert page into html file
         return scrapeJobDetails(html);
+    }
+
+
+    public String getJobListJSON(String keywords, String zipCode) {
+        try {
+            FileManager fm = new FileManager();
+            return fm.convertToJson(getJobList(keywords, zipCode));
+        } catch (Exception e) {
+            System.out.println("Error when calling getJobListJSON: ");
+            System.out.println(e);
+            return null;
+        }
+
     }
 
 

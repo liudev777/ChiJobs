@@ -1,4 +1,4 @@
-package com.chijobs.database;
+package com.chijobs.ChiJobs.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -55,27 +55,34 @@ public class MySQLDatabase {
     }
 
     public static void addJob(String jobId, String jobTitle, String company, String location, String description, String query) throws SQLException {
-        String jobSql = "INSERT INTO jobs (job_id, job_title, company, location, description) VALUES (?, ?, ?, ?, ?)";
-        String queryJobSql = "INSERT INTO query_jobs (query, job_id) VALUES (?, ?)";
-
+        String jobSql = "INSERT INTO jobs (job_id, job_title, company, location, description) VALUES (?, ?, ?, ?, ?) " +
+                        "ON DUPLICATE KEY UPDATE " +
+                        "job_title = VALUES(job_title), " +
+                        "company = VALUES(company), " +
+                        "location = VALUES(location), " +
+                        "description = VALUES(description)";
+    
+        String queryJobSql = "INSERT IGNORE INTO query_jobs (query, job_id) VALUES (?, ?)";
+    
         try (Connection conn = connect();
              PreparedStatement jobStmt = conn.prepareStatement(jobSql);
              PreparedStatement queryJobStmt = conn.prepareStatement(queryJobSql)) {
-
-            // Add job
+    
+            // Add job or update if it already exists
             jobStmt.setString(1, jobId);
             jobStmt.setString(2, jobTitle);
             jobStmt.setString(3, company);
             jobStmt.setString(4, location);
             jobStmt.setString(5, description);
             jobStmt.executeUpdate();
-
+    
             // Link job to query
             queryJobStmt.setString(1, query);
             queryJobStmt.setString(2, jobId);
             queryJobStmt.executeUpdate();
         }
     }
+    
 
     public static void addQueryTime(String query, Timestamp timestamp) throws SQLException {
         String sql = "INSERT INTO query_time (query, last_used) VALUES (?, ?) ON DUPLICATE KEY UPDATE last_used = VALUES(last_used)";
