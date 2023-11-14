@@ -1,33 +1,48 @@
-import React from 'react';
+import {React, useState} from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function SearchBar() {
+    const [keywords, setKeywords] = useState('');
+    const [zipcode, setZipcode] = useState('');
+    const navigate = useNavigate(); // For navigation
+
+    const [loading, setLoading] = useState(false);
+
+    const handleSearch = async () => {
+        setLoading(true);
+        try {
+            const res = await axios.get('http://localhost:8090/searchJobs', {
+                params: { keyword: keywords, zipcode: zipcode }
+            });
+            navigate('/results', { state: { data: res.data, loading: false } });
+        } catch (error) {
+            console.error('Error fetching data: ', error);
+            setLoading(false);
+        }
+    };
+    
+
     return (
         <div className='search-section'>
-            <input type="text" placeholder="Job title, Company..." style={{margin:"10px"}}/>
-            <select name="remote" style={{margin:"10px"}}>
-            <option value="select-work-preference">Select Work Preference</option>
-            <option value="">Remote</option>
-            <option value="">Hybrid</option>
-            <option value="">In-Person</option>
-            {/* Add more options */}
-            </select>
-            <select name="job-type" style={{margin:"10px"}}>
-            <option value="select-type">Select Job Type</option>
-            <option value="full-time">Full time</option>
-            <option value="part-time">Part time</option>
-            <option value="contract">Contract</option>
-            <option value="internship">Internship</option>
-            <option value="temporary">Temporary</option>
-            {/* Add more options */}
-            </select>
-            <select name="date-posted" style={{margin:"10px"}}>
-            <option value="date-posted">Select Date Posted</option>
-            <option value="1-day">1 day</option>
-            <option value="3-day">3 day</option>
-            <option value="1-week">1 week</option>
-            <option value="1-month">1 month</option>
-            </select>
-            <button style={{margin:"10px"}}>Search Job</button>
+            <input 
+                type="text" 
+                placeholder="Job title, Company..." 
+                style={{ margin: "10px" }}
+                onChange={(e) => setKeywords(e.target.value)}
+            />
+            <input 
+                type="text" 
+                placeholder="Zipcode" 
+                style={{ margin: "10px" }}
+                onChange={(e) => setZipcode(e.target.value)}
+            />
+            <button 
+                style={{ margin: "10px" }}
+                onClick={handleSearch}
+            >
+                Search Job
+            </button>
         </div>
     );
 }
