@@ -3,8 +3,11 @@ package com.chijobs.ChiJobs.database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -22,10 +25,8 @@ public class MySQLDatabase {
     public static void handleJobSQL(String keywords, Map<String, Map<String, String>> jobList) throws SQLException {
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
     
-        // 1. Add or update query timestamp
         addQueryTime(keywords, currentTimestamp);
     
-        // 2. Add scraped jobs to the jobs table
         for (Map.Entry<String, Map<String, String>> entry : jobList.entrySet()) {
             Map<String, String> jobDetails = entry.getValue();
             String jobId = jobDetails.get("jobId");
@@ -93,4 +94,21 @@ public class MySQLDatabase {
             pstmt.executeUpdate();
         }
     }
+
+
+    public static List<String> getTopQueries() throws SQLException {
+    String sql = "SELECT query FROM query_time ORDER BY last_used DESC LIMIT 3";
+    List<String> topQueries = new ArrayList<>();
+
+    try (Connection conn = connect();
+         PreparedStatement pstmt = conn.prepareStatement(sql);
+         ResultSet rs = pstmt.executeQuery()) {
+        
+        while (rs.next()) {
+            topQueries.add(rs.getString("query"));
+        }
+    }
+    return topQueries;
+}
+
 }

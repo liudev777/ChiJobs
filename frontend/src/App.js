@@ -4,8 +4,9 @@ import './App.css';
 import Home from "./pages/Home";
 import JobDetail from "./pages/JobDetail";
 import Jobs from "./pages/Jobs";
+import Results from './pages/Results';
 
-import "./server";
+// import "./server";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/jobs/:id" element={<JobDetail />} />
+        <Route path="/results" element={<Results />}></Route>
       </Routes>
     </BrowserRouter>
   );

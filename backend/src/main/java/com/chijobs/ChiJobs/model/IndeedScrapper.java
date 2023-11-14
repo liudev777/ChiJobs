@@ -14,8 +14,11 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
-import io.github.cdimascio.dotenv.Dotenv;
+
+import com.chijobs.ChiJobs.database.MySQLDatabase;
 import com.chijobs.ChiJobs.model.FileManager;
+
+import io.github.cdimascio.dotenv.Dotenv;
 
 @Service
 public class IndeedScrapper {
@@ -33,6 +36,8 @@ public class IndeedScrapper {
     public String getJobListJSON(String keywords, String zipCode) {
         try {
             FileManager fm = new FileManager();
+            Map<String, Map<String, String>> jobList = getJobList(keywords, zipCode);
+            MySQLDatabase.handleJobSQL(keywords, jobList);
             return fm.convertToJson(getJobList(keywords, zipCode));
         } catch (Exception e) {
             System.out.println("Error when calling getJobListJSON: ");
