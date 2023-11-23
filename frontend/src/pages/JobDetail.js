@@ -1,26 +1,73 @@
-import React from "react"
-import { useParams } from "react-router-dom"
+import axios from 'axios';
+import React from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-export default function VanDetail() {
+export default function JobDetail() {
+    const navigate = useNavigate();
     const params = useParams()
     const [job, setJob] = React.useState(null)
+    const [applied, setApplied] = React.useState(false)
 
     React.useEffect(() => {
-        fetch(`/api/jobs/${params.id}`)
-            .then(res => res.json())
-            .then(data => setJob(data.jobs))
+        axios.post('http://localhost:8090/getJob', {jobid: params.id,
+                title: " ",
+                company: " ",
+                location: " ",
+                description: " "
+        }, { withCredentials: true })
+        .then(res => {
+            console.log(res.data.jobid)
+            setJob(res.data)
+            // checkApplicationStatus(res.data.jobid)
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }, [params.id])
+
+    // const checkApplicationStatus = async (jobid) => {
+    //     axios.post('http://localhost:8090/checkApplication', {jobid: jobid,
+    //     title: " ",
+    //     company: " ",
+    //     location: " ",
+    //     description: " "
+    //     }, { withCredentials: true })
+    //     .then(res => {
+    //         // console.log(res.data)
+    //         setApplied(true);
+    //     })
+    //     .catch(err => {
+    //         console.log(err);
+    //         setApplied(false);
+    //     });
+    // };
+
+    const apply  = async (jobid) => {
+        axios.post('http://localhost:8090/apply', {jobid: params.id,
+                title: " ",
+                company: " ",
+                location: " ",
+                description: " "
+        }, { withCredentials: true })
+        .then(res => {
+            if(res.data === "Added Successfully"){
+                setApplied(true);
+                // navigate('/results');
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
 
     return (
         <div>
             {job ? (
                 <div>
-                    <h3>{job.company}</h3>
-                    <p>Position: {job.position}</p>
-                    <p>Level: {job.level}</p>
+                    <h2>{job.company}--<button onClick={() => applied ? null : apply(job.jobId)} disabled={applied}>{applied ? "Applied" : "Apply"}</button></h2>
+                    <h3>Position: {job.title}</h3>
                     <p>Location: {job.location}</p>
-                    <p>{job.languages}</p>
-                    <p>{job.contract}</p>
+                    <p>Description: {job.description}</p>
                 </div>
             ) : <h2>Loading...</h2>}
         </div>

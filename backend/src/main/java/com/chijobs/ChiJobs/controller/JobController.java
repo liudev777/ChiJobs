@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.chijobs.ChiJobs.model.IndeedScrapper;
 
+import com.chijobs.ChiJobs.model.IndeedScrapper;
 
 @RestController
 @CrossOrigin
@@ -16,7 +16,7 @@ public class JobController {
         return "testing";
     }
 
-     @GetMapping("/searchJobs")
+    @GetMapping("/searchJobs")
     public String searchJobs(@RequestParam String keyword, @RequestParam String zipcode) {
 
         IndeedScrapper is = new IndeedScrapper();
@@ -24,6 +24,4 @@ public class JobController {
         return jobJSON;
     }
 
-
-    
 }

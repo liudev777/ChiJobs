@@ -1,9 +1,12 @@
 import React from 'react';
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
+import SessionChecker from './components/SessionChecker';
 import Home from "./pages/Home";
 import JobDetail from "./pages/JobDetail";
 import Jobs from "./pages/Jobs";
+import Login from './pages/Login';
+import Register from './pages/Register';
 import Results from './pages/Results';
 
 // import "./server";
@@ -11,10 +14,12 @@ import Results from './pages/Results';
 export default function App() {
   return (
     <BrowserRouter>
-    <Link to="/">Home</Link>
-    <Link to="/jobs">Jobs</Link>
+      <SessionChecker />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/signup" element={<Register />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/jobs/:id" element={<JobDetail />} />
         <Route path="/results" element={<Results />}></Route>
