@@ -1,7 +1,9 @@
+import axios from 'axios';
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 export default function Results() {
+    const navigate = useNavigate();
     const location = useLocation();
     const { data, loading } = location.state || {};
 
@@ -17,17 +19,40 @@ export default function Results() {
     // Convert object to array
     const jobsArray = Object.values(data);
 
+    console.log(jobsArray);
+
+    const apply  = async (jobid) => {
+        console.log(jobid);
+        axios.post('http://localhost:8090/apply', {jobid: jobid,
+                title: " ",
+                company: " ",
+                location: " ",
+                description: " "
+        }, { withCredentials: true })
+        .then(res => {
+            console.log(res)
+            if(res.data === "Job application Added Successful"){
+                navigate('/home');
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+
     return (
         <div>
             <h2>Job Results</h2>
             <ul>
                 {jobsArray.map((job, index) => (
-                    <li key={index}>
-                        <h3>{job.title}</h3>
-                        <p>{job.company}</p>
-                        <p>{job.location}</p>
-                        <p>{job.description}</p>
-                    </li>
+                    <div>
+                        <li key={index}>
+                            <h3>{job.title}--<Link to={`/jobs/${job.jobId}`}><button>Apply</button></Link></h3>
+                            <p>{job.company}</p>
+                            <p>{job.location}</p>
+                            <p>{job.description}</p>
+                        </li>
+                    </div>
                 ))}
             </ul>
         </div>
