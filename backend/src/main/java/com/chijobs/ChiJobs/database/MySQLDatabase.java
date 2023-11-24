@@ -205,4 +205,24 @@ public class MySQLDatabase {
         }
     }
 
+    public static List<String> findAllTitles() throws SQLException {
+        String jobTitleSql = "SELECT job_title FROM jobs GROUP BY job_title;";
+        List<String> jobTitles = new ArrayList<>();
+
+        try (Connection conn = connect(); PreparedStatement titleStmt = conn.prepareStatement(jobTitleSql)) {
+
+            ResultSet rs = titleStmt.executeQuery();
+
+            while (rs.next()) {
+                String jobTitle = rs.getString("job_title");
+                jobTitles.add(jobTitle);
+            }
+
+            return jobTitles;
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ArrayList<>();
+        }
+    }
+
 }

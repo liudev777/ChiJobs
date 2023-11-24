@@ -1,10 +1,12 @@
 package com.chijobs.ChiJobs.controller;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,6 +60,16 @@ public class ApplyController {
             }
         } catch (SQLException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/getJobTitles")
+    public List<String> getJobTitles() {
+        try {
+            return MySQLDatabase.findAllTitles();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return List.of();
         }
     }
 }
