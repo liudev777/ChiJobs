@@ -80,6 +80,72 @@ footer {
     padding: 210px;  
 }
 
+.search-bar-container {
+    position: relative;
+    display: inline-block;
+    width: 30%; /* Adjust the width as needed */
+}
+
+.job-search-input {
+    width: calc(100% - 20px); /* Adjust the width as needed */
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.suggestions-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1;
+}
+
+.suggestions-list li {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.3s;
+}
+
+.suggestions-list li:last-child {
+    border-bottom: none;
+}
+
+.suggestions-list li:hover {
+    background-color: #f0f0f0;
+}
+
+.zipcode-input, .search-button {
+    width: calc(40% - 20px); /* Adjust the width as needed */
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.search-button {
+    background-color: #4caf50; /* Adjust the background color */
+    color: #fff;
+    cursor: pointer;
+}
+
+.search-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+
+
 .trending-keyword-section {
     padding: 20px;
 }

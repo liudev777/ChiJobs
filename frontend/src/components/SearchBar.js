@@ -1,12 +1,13 @@
 import axios from 'axios';
 import { React, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import jobTitlesData from '../data.json';
 
 export default function SearchBar() {
     const [keywords, setKeywords] = useState('');
     const [zipcode, setZipcode] = useState('');
-    const navigate = useNavigate(); // For navigation
-
+    const navigate = useNavigate();
+    const [suggestions, setSuggestions] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const handleSearch = async () => {
@@ -21,16 +22,56 @@ export default function SearchBar() {
             setLoading(false);
         }
     };
+
+    const handleKeywordChange = (e) => {
+        const input = e.target.value;
+        setKeywords(input);
+
+        // Clear suggestions if input is empty
+        if (input.trim() === '') {
+            setSuggestions([]);
+            return;
+        }
+        
+        // Filter job titles based on input
+        const filteredSuggestions = jobTitlesData.jobTitles.filter(
+            (title) => title.toLowerCase().includes(input.toLowerCase())
+        );
+
+        // Update the suggestions
+        setSuggestions(filteredSuggestions);
+    };
+
+    const handleSuggestionClick = (suggestion) => {
+        // Set the selected suggestion as the input value
+        setKeywords(suggestion);
+
+        // Clear the suggestions
+        setSuggestions([]);
+    };
     
 
     return (
         <div className='search-section'>
-            <input 
-                type="text" 
-                placeholder="Job title, Company..." 
-                style={{ margin: "10px" }}
-                onChange={(e) => setKeywords(e.target.value)}
-            />
+            <div className="search-bar-container">
+                <input 
+                    type="text" 
+                    placeholder="Job title, Company..." 
+                    style={{ margin: "10px" }}
+                    value={keywords}
+                    onChange={handleKeywordChange}
+                />
+                {/* Display suggestions */}
+                {suggestions.length > 0 && (
+                    <ul className="suggestions-list">
+                        {suggestions.map((suggestion, index) => (
+                            <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
+                                {suggestion}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
             <input 
                 type="text" 
                 placeholder="Zipcode" 
