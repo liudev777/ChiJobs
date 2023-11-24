@@ -9,7 +9,6 @@ export default function Home() {
     return (
         <div className="App">
         <Header />
-        {/* <Autocomplete/> */}
         <SearchBar />
         <TrendingKeywords />
         <Footer />
