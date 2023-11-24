@@ -1,14 +1,28 @@
 import axios from 'axios';
-import { React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import jobTitlesData from '../data.json';
 
 export default function SearchBar() {
     const [keywords, setKeywords] = useState('');
     const [zipcode, setZipcode] = useState('');
     const navigate = useNavigate();
+    const [allJobTitles, setAllJobTitles] = useState([]);
     const [suggestions, setSuggestions] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        // Fetch all job titles when the component mounts
+        fetchAllJobTitles();
+    }, []);
+
+    const fetchAllJobTitles = async () => {
+        try {
+            const response = await axios.get('http://localhost:8090/getJobTitles');
+            setAllJobTitles(response.data);
+        } catch (error) {
+            console.error('Error fetching all job titles: ', error);
+        }
+    };
 
     const handleSearch = async () => {
         setLoading(true);
@@ -32,9 +46,9 @@ export default function SearchBar() {
             setSuggestions([]);
             return;
         }
-        
-        // Filter job titles based on input
-        const filteredSuggestions = jobTitlesData.jobTitles.filter(
+
+        // Filter job titles based on input locally
+        const filteredSuggestions = allJobTitles.filter(
             (title) => title.toLowerCase().includes(input.toLowerCase())
         );
 
@@ -49,20 +63,19 @@ export default function SearchBar() {
         // Clear the suggestions
         setSuggestions([]);
     };
-    
 
     return (
         <div className='search-section'>
             <div className="search-bar-container">
-                <input 
-                    type="text" 
-                    placeholder="Job title, Company..." 
+                <input
+                    type="text"
+                    placeholder="Job title, Company..."
                     style={{ margin: "10px" }}
                     value={keywords}
                     onChange={handleKeywordChange}
                 />
-                {/* Display suggestions */}
-                {suggestions.length > 0 && (
+                {/* Display suggestions only if there are suggestions and the input is not empty */}
+                {suggestions.length > 0 && keywords.trim() !== '' && (
                     <ul className="suggestions-list">
                         {suggestions.map((suggestion, index) => (
                             <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
@@ -72,13 +85,13 @@ export default function SearchBar() {
                     </ul>
                 )}
             </div>
-            <input 
-                type="text" 
-                placeholder="Zipcode" 
+            <input
+                type="text"
+                placeholder="Zipcode"
                 style={{ margin: "10px" }}
                 onChange={(e) => setZipcode(e.target.value)}
             />
-            <button 
+            <button
                 style={{ margin: "10px" }}
                 onClick={handleSearch}
             >
