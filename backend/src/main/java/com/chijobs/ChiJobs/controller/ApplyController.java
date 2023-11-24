@@ -50,7 +50,7 @@ public class ApplyController {
         try {
             HttpSession session = request.getSession(false);
             String email = session.getAttribute("email").toString();
-            Boolean found = MySQLDatabase.getUser(email, job.getJobid());
+            Boolean found = MySQLDatabase.getApplication(email, job.getJobid());
             if (found == true) {
                 return new ResponseEntity<>(true, HttpStatus.OK);
             } else {

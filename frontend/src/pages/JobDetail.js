@@ -18,31 +18,31 @@ export default function JobDetail() {
         .then(res => {
             console.log(res.data.jobid)
             setJob(res.data)
-            // checkApplicationStatus(res.data.jobid)
+            checkApplicationStatus(res.data.jobid)
         })
         .catch(err => {
             console.log(err);
         })
     }, [params.id])
 
-    // const checkApplicationStatus = async (jobid) => {
-    //     axios.post('http://localhost:8090/checkApplication', {jobid: jobid,
-    //     title: " ",
-    //     company: " ",
-    //     location: " ",
-    //     description: " "
-    //     }, { withCredentials: true })
-    //     .then(res => {
-    //         // console.log(res.data)
-    //         setApplied(true);
-    //     })
-    //     .catch(err => {
-    //         console.log(err);
-    //         setApplied(false);
-    //     });
-    // };
+    const checkApplicationStatus = async (jobid) => {
+        axios.post('http://localhost:8090/checkApplication', {jobid: jobid,
+        title: " ",
+        company: " ",
+        location: " ",
+        description: " "
+        }, { withCredentials: true })
+        .then(res => {
+            // console.log(res.data)
+            setApplied(true);
+        })
+        .catch(err => {
+            console.log(err);
+            setApplied(false);
+        });
+    };
 
-    const apply  = async (jobid) => {
+    const apply  = async () => {
         axios.post('http://localhost:8090/apply', {jobid: params.id,
                 title: " ",
                 company: " ",
@@ -64,7 +64,17 @@ export default function JobDetail() {
         <div>
             {job ? (
                 <div>
-                    <h2>{job.company}--<button onClick={() => applied ? null : apply(job.jobId)} disabled={applied}>{applied ? "Applied" : "Apply"}</button></h2>
+                    <h2>{job.company}--<button
+                        onClick={() => applied ? null : apply()}
+                        disabled={applied}
+                        style={{
+                            cursor: applied ? 'default' : 'pointer',
+                            backgroundColor: applied ? 'gray' : 'green',
+                            color: '#fff', // Set text color to white
+                        }}
+                    >
+                        {applied ? "Applied" : "Apply"}
+                    </button></h2>
                     <h3>Position: {job.title}</h3>
                     <p>Location: {job.location}</p>
                     <p>Description: {job.description}</p>
