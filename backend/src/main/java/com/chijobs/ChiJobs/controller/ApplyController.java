@@ -1,6 +1,7 @@
 package com.chijobs.ChiJobs.controller;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -70,6 +71,36 @@ public class ApplyController {
         } catch (SQLException e) {
             e.printStackTrace();
             return List.of();
+        }
+
+
+    }
+
+    @GetMapping("/getBookmarkedJobs")
+    public ResponseEntity<List<Job>> getBookmarkedJobs(HttpServletRequest request) {
+        try {
+            HttpSession session = request.getSession(false);
+            String email = session.getAttribute("email").toString();
+            List<Job> bookmarkedJobs = MySQLDatabase.getBookmarkedJobs(email);
+            return new ResponseEntity<>(bookmarkedJobs, HttpStatus.OK);
+        } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArrayList<>());
+        }
+    }
+
+    @PostMapping("/bookmarkJob")
+    public ResponseEntity<String> bookmarkJob(@RequestBody Job job, HttpServletRequest request) {
+        try {
+            HttpSession session = request.getSession(false);
+            String email = session.getAttribute("email").toString();
+            String message = MySQLDatabase.addBookmark(email, job.getJobid());
+            if (message.equals("Job bookmarked successfully")) {
+                return new ResponseEntity<>("Job bookmarked successfully", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Error in bookmarking job", HttpStatus.FORBIDDEN);
+            }
+        } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 }
