@@ -20,11 +20,11 @@ public class Recommender {
 
     private static Dotenv dotenv = Dotenv.load();
 
-    private OkHttpClient httpClient;
-    private final String apiKey = dotenv.get("OPENAI_TOKEN");
+    private static OkHttpClient httpClient;
+    private static final String apiKey = dotenv.get("OPENAI_TOKEN");
 
-    public List<String> sendChatRequest(String referenceJobs, String poolOfJobs) throws Exception {
-        this.httpClient = new OkHttpClient.Builder()
+    public static List<String> sendChatRequest(String referenceJobs, String poolOfJobs) throws Exception {
+        httpClient = new OkHttpClient.Builder()
                 .connectTimeout(30, TimeUnit.SECONDS) // Set the connect timeout
                 .writeTimeout(30, TimeUnit.SECONDS)   // Set the write timeout
                 .readTimeout(30, TimeUnit.SECONDS)    // Set the read timeout
@@ -36,7 +36,7 @@ public class Recommender {
 
         JSONArray messages = new JSONArray();
         messages.put(new JSONObject().put("role", "system").put("content", "You are a job recommender, expert in taking a list of jobs and using it to pick 10 jobs from a pool of job options."));
-        messages.put(new JSONObject().put("role", "user").put("content", "Do not provide any extra commentary. Return a list of 10 jobs from" + poolOfJobs + "based on recommendations using the following list: " + referenceJobs + "separated with nothing but space and comma in the format: a, b, c, d ..."));
+        messages.put(new JSONObject().put("role", "user").put("content", "Do not provide any extra commentary. Return a list of 10 (or less if there isn't anything else that is highly recommended) job ID from" + poolOfJobs + "corresponding to the job based on recommendations using the following list: " + referenceJobs + "separated with nothing but space and comma in the format: id1, id2, id3, id4 ... Do not return the job titles, only the corresponding ID"));
         
         jsonPayload.put("messages", messages);
 
@@ -59,7 +59,7 @@ public class Recommender {
         }
     }
 
-    public List<String> parseResponse(String jsonResponse) {
+    public static List<String> parseResponse(String jsonResponse) {
         // Parse the JSON response
         JSONObject responseObject = new JSONObject(jsonResponse);
 

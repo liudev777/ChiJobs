@@ -31,20 +31,20 @@ public class ChiJobsApplication {
 
         System.out.println("Running ChiJobsApplication!");
         // runIndeedScraper("Mechanical Engineer", "60616");
-        Recommender recommender = new Recommender();
+        // Recommender recommender = new Recommender();
 
-        // Test data
-        String referenceJobs = "Software Engineer, Data Scientist";
-        String poolOfJobs = "Web Developer, Software Engineer, IT Manager, Data Scientist, Product Manager, Graphic Designer, UX Designer, Systems Analyst, Database Administrator, Network Administrator";
+        // // Test data
+        // String referenceJobs = "Software Engineer, Data Scientist";
+        // String poolOfJobs = "Web Developer, Software Engineer, IT Manager, Data Scientist, Product Manager, Graphic Designer, UX Designer, Systems Analyst, Database Administrator, Network Administrator";
 
-        // Call the recommendJobs method
-        // System.out.println("Recommended Jobs:");
-        try {
-            System.out.println(recommender.sendChatRequest(referenceJobs, poolOfJobs));
+        // // Call the recommendJobs method
+        // // System.out.println("Recommended Jobs:");
+        // try {
+        //     System.out.println(recommender.sendChatRequest(referenceJobs, poolOfJobs));
             
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        // } catch (Exception e) {
+        //     System.out.println(e);
+        // }
 
     }
 

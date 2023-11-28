@@ -1,7 +1,8 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../signupstyle.css';
+import { UserContext } from '../context/UserContext';
 
 export default function LoginForm() {
 
@@ -12,6 +13,8 @@ export default function LoginForm() {
     const [error,setError] = useState(false);
 
     const navigate = useNavigate();
+
+    const { setUser } = useContext(UserContext);
 
     const handleInputChange = (e) => {
         const {id , value} = e.target;
@@ -32,6 +35,8 @@ export default function LoginForm() {
         .then(res => {
             console.log(res)
             if(res.data === "Authorized"){
+                setUser({ email: email });
+                localStorage.setItem('user', JSON.stringify({email: email}));
                 navigate('/home');
             }
         })

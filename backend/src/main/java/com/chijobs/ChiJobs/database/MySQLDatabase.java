@@ -278,4 +278,64 @@ public class MySQLDatabase {
         return bookmarkedJobs;
     }
 
+    public static List<Job> getAppliedJobs(String email) throws SQLException {
+        List<Job> appliedJobs = new ArrayList<>();
+        String sql = "SELECT j.job_id, j.job_title, j.company, j.location, j.description " +
+                "FROM applied_jobs aj " +
+                "JOIN jobs j ON aj.job_id = j.job_id " +
+                "JOIN users u ON aj.user_id = u.user_id " +
+                "WHERE u.email = ?";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, email);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String jobid = rs.getString("job_id");
+                    String title = rs.getString("job_title");
+                    String company = rs.getString("company");
+                    String location = rs.getString("location");
+                    String description = rs.getString("description");
+                    appliedJobs.add(new Job(jobid, title, company, location, description));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getAppliedJobs: " + e.getMessage());
+            throw e; 
+        }
+
+        return appliedJobs;
+    }
+
+    public static List<Job> getLastXJobs(int numberOfJobs) throws SQLException {
+        List<Job> lastXJobs = new ArrayList<>();
+        String sql = "SELECT job_id, job_title, company, location, description " +
+                     "FROM jobs " +
+                     "ORDER BY RAND() " + 
+                     "LIMIT ?"; 
+
+        try (Connection conn = connect(); 
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, numberOfJobs);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String jobid = rs.getString("job_id");
+                    String title = rs.getString("job_title");
+                    String company = rs.getString("company");
+                    String location = rs.getString("location");
+                    String description = rs.getString("description");
+                    lastXJobs.add(new Job(jobid, title, company, location, description));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getLastXJobs: " + e.getMessage());
+            throw e;
+        }
+
+        return lastXJobs;
+    }
+
+
 }
