@@ -40,6 +40,16 @@ export default function Results() {
         });
     }
 
+    const bookmarkJob = (jobId) => {
+        axios.post('http://localhost:8090/bookmarkJob', { jobid: jobId }, { withCredentials: true })
+        .then(response => {
+            console.log(response.data); // Handle the response
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }
+
     return (
         <div>
             <h2>Job Results</h2>
@@ -51,6 +61,8 @@ export default function Results() {
                             <p>{job.company}</p>
                             <p>{job.location}</p>
                             <p>{job.description}</p>
+                            <button onClick={() => bookmarkJob(job.jobId)}>Bookmark</button>
+
                         </li>
                     </div>
                 ))}

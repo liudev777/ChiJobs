@@ -8,6 +8,7 @@ import Jobs from "./pages/Jobs";
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Results from './pages/Results';
+import UserProfile from './pages/UserProfile'; // Import the UserProfile component
 
 // import "./server";
 
@@ -23,6 +24,9 @@ export default function App() {
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/jobs/:id" element={<JobDetail />} />
         <Route path="/results" element={<Results />}></Route>
+        <Route path="/profile" element={<UserProfile />} /> {/* Add the UserProfile route */}
+
+
       </Routes>
     </BrowserRouter>
   );
