@@ -8,6 +8,8 @@ import Jobs from "./pages/Jobs";
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Results from './pages/Results';
+import Recommend from './pages/Recommend';
+import { UserProvider } from './context/UserContext';
 
 // import "./server";
 
@@ -15,6 +17,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <SessionChecker />
+      <UserProvider>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
@@ -23,7 +26,9 @@ export default function App() {
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/jobs/:id" element={<JobDetail />} />
         <Route path="/results" element={<Results />}></Route>
+        <Route path="/recommend" element={<Recommend />}/>
       </Routes>
+      </UserProvider>
     </BrowserRouter>
   );
 }

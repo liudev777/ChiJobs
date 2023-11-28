@@ -4,12 +4,14 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
 import TrendingKeywords from "../components/TrendingKeywords";
+import Recommend from './Recommend';
 
 export default function Home() {
     return (
         <div className="App">
         <Header />
         <SearchBar />
+        <Recommend />
         <TrendingKeywords />
         <Footer />
         </div>
