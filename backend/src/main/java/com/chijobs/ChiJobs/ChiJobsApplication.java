@@ -1,5 +1,6 @@
 package com.chijobs.ChiJobs;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import com.chijobs.ChiJobs.database.MySQLDatabase;
 import com.chijobs.ChiJobs.model.FileManager;
 import com.chijobs.ChiJobs.model.IndeedScrapper;
 import com.chijobs.ChiJobs.model.JobScraper;
+import com.chijobs.ChiJobs.model.Recommender;
 
 @SpringBootApplication
 public class ChiJobsApplication {
@@ -28,7 +30,21 @@ public class ChiJobsApplication {
         SpringApplication.run(ChiJobsApplication.class, args);
 
         System.out.println("Running ChiJobsApplication!");
-        runIndeedScraper("Mechanical Engineer", "60616");
+        // runIndeedScraper("Mechanical Engineer", "60616");
+        Recommender recommender = new Recommender();
+
+        // Test data
+        String referenceJobs = "Software Engineer, Data Scientist";
+        String poolOfJobs = "Web Developer, Software Engineer, IT Manager, Data Scientist, Product Manager, Graphic Designer, UX Designer, Systems Analyst, Database Administrator, Network Administrator";
+
+        // Call the recommendJobs method
+        // System.out.println("Recommended Jobs:");
+        try {
+            System.out.println(recommender.sendChatRequest(referenceJobs, poolOfJobs));
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
 
     }
 
