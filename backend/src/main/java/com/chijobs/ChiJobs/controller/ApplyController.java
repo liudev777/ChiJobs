@@ -73,7 +73,6 @@ public class ApplyController {
             return List.of();
         }
 
-
     }
 
     @GetMapping("/getBookmarkedJobs")
@@ -101,6 +100,38 @@ public class ApplyController {
             }
         } catch (SQLException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/unbookmarkJob")
+    public ResponseEntity<String> unbookmarkJob(@RequestBody Job job, HttpServletRequest request) {
+        try {
+            HttpSession session = request.getSession(false);
+            String email = session.getAttribute("email").toString();
+            String message = MySQLDatabase.removeBookmark(email, job.getJobid());
+            if (message.equals("Job unbookmarked successfully")) {
+                return new ResponseEntity<>("Job unbookmarked successfully", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Error in unbookmarking job", HttpStatus.FORBIDDEN);
+            }
+        } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/checkBookmarkStatus")
+    public boolean checkBookmarkStatus(@RequestBody Job job, HttpServletRequest request) {
+        try {
+            HttpSession session = request.getSession(false);
+            String email = session.getAttribute("email").toString();
+            Boolean message = MySQLDatabase.checkBookmarkStatus(email, job.getJobid());
+            if (message) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            return false;
         }
     }
 }

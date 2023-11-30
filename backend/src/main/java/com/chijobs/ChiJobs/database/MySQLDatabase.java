@@ -247,6 +247,50 @@ public class MySQLDatabase {
         }
     }
 
+    public static String removeBookmark(String email, String jobId) throws SQLException {
+        String unbookmarkSql = "DELETE FROM bookmarked_jobs WHERE user_id = (SELECT user_id FROM users WHERE email = ?) AND job_id = ?";
+
+        try (Connection conn = connect(); PreparedStatement unbookmarkStmt = conn.prepareStatement(unbookmarkSql)) {
+            // Set parameters
+            unbookmarkStmt.setString(1, email);
+            unbookmarkStmt.setString(2, jobId);
+
+            // Execute update
+            int rowsAffected = unbookmarkStmt.executeUpdate();
+            if (rowsAffected > 0) {
+                return "Job unbookmarked successfully";
+            } else {
+                return "Failed to unbookmark job";
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            return e.toString();
+        }
+    }
+
+    public static boolean checkBookmarkStatus(String email, String jobId) throws SQLException {
+        String checkBookmarkStatusSql = "SELECT COUNT(*) FROM bookmarked_jobs WHERE user_id = (SELECT user_id FROM users WHERE email = ?) AND job_id = ?";
+
+        try (Connection conn = connect();
+                PreparedStatement checkBookmarkStatusStmt = conn.prepareStatement(checkBookmarkStatusSql)) {
+            // Set parameters
+            checkBookmarkStatusStmt.setString(1, email);
+            checkBookmarkStatusStmt.setString(2, jobId);
+
+            // Execute query
+            try (ResultSet resultSet = checkBookmarkStatusStmt.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    return count > 0;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+
+        return false;
+    }
 
     public static List<Job> getBookmarkedJobs(String email) throws SQLException {
         List<Job> bookmarkedJobs = new ArrayList<>();
@@ -257,7 +301,7 @@ public class MySQLDatabase {
                 "WHERE u.email = ?";
 
         try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, email);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -287,7 +331,7 @@ public class MySQLDatabase {
                 "WHERE u.email = ?";
 
         try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, email);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -302,7 +346,33 @@ public class MySQLDatabase {
             }
         } catch (Exception e) {
             System.out.println("Error in getAppliedJobs: " + e.getMessage());
-            throw e; 
+            throw e;
+        }
+
+        return appliedJobs;
+    }
+
+    public static List<Job> getJobsApplied(String email) throws SQLException {
+        List<Job> appliedJobs = new ArrayList<>();
+        String sql = "select j.job_id, j.job_title, j.company, j.location, j.description from JobApplication ja JOIN jobs j ON ja.JobID = j.job_id WHERE ja.email = ?";
+
+        try (Connection conn = connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, email);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String jobid = rs.getString("job_id");
+                    String title = rs.getString("job_title");
+                    String company = rs.getString("company");
+                    String location = rs.getString("location");
+                    String description = rs.getString("description");
+                    appliedJobs.add(new Job(jobid, title, company, location, description));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getAppliedJobs: " + e.getMessage());
+            throw e;
         }
 
         return appliedJobs;
@@ -311,12 +381,12 @@ public class MySQLDatabase {
     public static List<Job> getLastXJobs(int numberOfJobs) throws SQLException {
         List<Job> lastXJobs = new ArrayList<>();
         String sql = "SELECT job_id, job_title, company, location, description " +
-                     "FROM jobs " +
-                     "ORDER BY RAND() " + 
-                     "LIMIT ?"; 
+                "FROM jobs " +
+                "ORDER BY RAND() " +
+                "LIMIT ?";
 
-        try (Connection conn = connect(); 
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, numberOfJobs);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -336,6 +406,5 @@ public class MySQLDatabase {
 
         return lastXJobs;
     }
-
 
 }
