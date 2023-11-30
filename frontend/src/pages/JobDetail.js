@@ -69,7 +69,8 @@ export default function JobDetail() {
         .then(res => {
             if(res.data === "Added Successfully"){
                 setApplied(true);
-                // navigate('/results');
+                const newTab = window.open(`https://www.indeed.com/viewjob?jk=${params.id}&tk=1hgh2k2kfim8s800&from=serp&vjs=3`, '_blank');
+                newTab.focus();
             }
         })
         .catch(err => {
