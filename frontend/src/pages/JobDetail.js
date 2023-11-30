@@ -7,23 +7,40 @@ export default function JobDetail() {
     const params = useParams()
     const [job, setJob] = React.useState(null)
     const [applied, setApplied] = React.useState(false)
+    const [bookmarked, setBookmarked] = React.useState(false)
 
     React.useEffect(() => {
-        axios.post('http://localhost:8090/getJob', {jobid: params.id,
-                title: " ",
-                company: " ",
-                location: " ",
-                description: " "
+        axios.post('http://localhost:8090/getJob', {
+            jobid: params.id,
+            title: " ",
+            company: " ",
+            location: " ",
+            description: " ",
         }, { withCredentials: true })
         .then(res => {
-            console.log(res.data.jobid)
-            setJob(res.data)
-            checkApplicationStatus(res.data.jobid)
+            console.log(res.data.jobid);
+            setJob(res.data);
+            checkApplicationStatus(res.data.jobid);
         })
         .catch(err => {
             console.log(err);
+        });
+
+        axios.post('http://localhost:8090/checkBookmarkStatus', {
+            jobid: params.id,
+            title: " ",
+            company: " ",
+            location: " ",
+            description: " ",
+        }, { withCredentials: true })
+        .then(res => {
+            console.log(res);
+            setBookmarked(res.data);
         })
-    }, [params.id])
+        .catch(err => {
+            console.log(err);
+        });
+    }, [params.id]);
 
     const checkApplicationStatus = async (jobid) => {
         axios.post('http://localhost:8090/checkApplication', {jobid: jobid,
@@ -60,6 +77,41 @@ export default function JobDetail() {
         });
     }
 
+    const toggleBookmark = () => {
+        // Check if the job is already bookmarked
+        if (!bookmarked){
+            axios.post('http://localhost:8090/bookmarkJob', {jobid: params.id,
+                    title: " ",
+                    company: " ",
+                    location: " ",
+                    description: " "
+            }, { withCredentials: true })
+            .then(res => {
+                console.log(res.data);
+                setBookmarked(!bookmarked);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+        else {
+            axios.post('http://localhost:8090/unbookmarkJob', {jobid: params.id,
+                    title: " ",
+                    company: " ",
+                    location: " ",
+                    description: " "
+            }, { withCredentials: true })
+            .then(res => {
+                console.log(res.data);
+                // If unbookmarking is successful, update the local state
+                setBookmarked(false);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+    };
+
     return (
         <div>
             {job ? (
@@ -74,7 +126,17 @@ export default function JobDetail() {
                         }}
                     >
                         {applied ? "Applied" : "Apply"}
-                    </button></h2>
+                    </button>
+                        <button
+                            onClick={toggleBookmark}
+                            style={{
+                                marginLeft: '10px',
+                                backgroundColor: bookmarked ? 'gray' : 'green',
+                            }}
+                        >
+                            {bookmarked ? "Bookmarked" : "Bookmark"}
+                        </button>
+                    </h2>
                     <h3>Position: {job.title}</h3>
                     <p>Location: {job.location}</p>
                     <p>Description: {job.description}</p>
