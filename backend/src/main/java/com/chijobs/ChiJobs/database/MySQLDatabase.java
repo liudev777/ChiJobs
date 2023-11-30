@@ -88,7 +88,7 @@ public class MySQLDatabase {
     }
 
     public static void addQueryTime(String query, Timestamp timestamp) throws SQLException {
-        String sql = "INSERT INTO query_time (query, last_used) VALUES (?, ?) ON DUPLICATE KEY UPDATE last_used = VALUES(last_used)";
+        String sql = "INSERT INTO query_time (query, last_used) VALUES (?, ?) ON DUPLICATE KEY UPDATE last_used = VALUES(last_used), count = count + 1";
         try (Connection conn = connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, query);
@@ -98,19 +98,20 @@ public class MySQLDatabase {
     }
 
     public static List<String> getTopQueries() throws SQLException {
-        String sql = "SELECT query FROM query_time ORDER BY last_used DESC LIMIT 3";
+        String sql = "SELECT query FROM query_time ORDER BY count DESC LIMIT 3";
         List<String> topQueries = new ArrayList<>();
-
+    
         try (Connection conn = connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql);
                 ResultSet rs = pstmt.executeQuery()) {
-
+    
             while (rs.next()) {
                 topQueries.add(rs.getString("query"));
             }
         }
         return topQueries;
     }
+    
 
     public static String addUser(String firsName, String lastName, String email, String password) throws SQLException {
         String userSql = "INSERT INTO Users (first_name, last_name, email, password) VALUES (?, ?, ?, ?) ";
