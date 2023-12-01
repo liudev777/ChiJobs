@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chijobs.ChiJobs.Application;
 import com.chijobs.ChiJobs.Job;
 import com.chijobs.ChiJobs.database.MySQLDatabase;
 
@@ -82,6 +83,16 @@ public class ApplyController {
             String email = session.getAttribute("email").toString();
             List<Job> bookmarkedJobs = MySQLDatabase.getBookmarkedJobs(email);
             return new ResponseEntity<>(bookmarkedJobs, HttpStatus.OK);
+        } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getAllApplications")
+    public ResponseEntity<List<Application>> getAllApplications() {
+        try {
+            List<Application> applications = MySQLDatabase.getAllApplications();
+            return new ResponseEntity<>(applications, HttpStatus.OK);
         } catch (SQLException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArrayList<>());
         }
