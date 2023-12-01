@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.chijobs.ChiJobs.Application;
 import com.chijobs.ChiJobs.Job;
 
 import io.github.cdimascio.dotenv.Dotenv;
@@ -377,6 +378,31 @@ public class MySQLDatabase {
         }
 
         return appliedJobs;
+    }
+
+    public static List<Application> getAllApplications() throws SQLException {
+        List<Application> applications = new ArrayList<>();
+        String sql = "select u.first_name, u.last_name, u.email, ja.ApplicationID, ja.JobID, ja.ApplicationDate from users u join JobApplication ja ON u.email = ja.email;";
+
+        try (Connection conn = connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String firstName = rs.getString("first_name");
+                    String lastName = rs.getString("last_name");
+                    String email = rs.getString("email");
+                    int applicationId = rs.getInt("ApplicationID");
+                    String jobId = rs.getString("JobID");
+                    applications.add(new Application(firstName, lastName, email, applicationId, jobId));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getAppliedJobs: " + e.getMessage());
+            throw e;
+        }
+
+        return applications;
     }
 
     public static List<Job> getLastXJobs(int numberOfJobs) throws SQLException {
