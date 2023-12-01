@@ -326,9 +326,9 @@ public class MySQLDatabase {
     public static List<Job> getAppliedJobs(String email) throws SQLException {
         List<Job> appliedJobs = new ArrayList<>();
         String sql = "SELECT j.job_id, j.job_title, j.company, j.location, j.description " +
-                "FROM applied_jobs aj " +
-                "JOIN jobs j ON aj.job_id = j.job_id " +
-                "JOIN users u ON aj.user_id = u.user_id " +
+                "FROM JobApplication ja " +
+                "JOIN jobs j ON ja.jobID = j.job_id " +
+                "JOIN users u ON ja.email = u.email " +
                 "WHERE u.email = ?";
 
         try (Connection conn = connect();

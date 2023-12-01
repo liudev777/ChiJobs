@@ -38,7 +38,7 @@ public class IndeedScrapper {
             FileManager fm = new FileManager();
             Map<String, Map<String, String>> jobList = getJobList(keywords, zipCode);
             MySQLDatabase.handleJobSQL(keywords, jobList);
-            return fm.convertToJson(getJobList(keywords, zipCode));
+            return fm.convertToJson(jobList);
         } catch (Exception e) {
             System.out.println("Error when calling getJobListJSON: ");
             System.out.println(e);

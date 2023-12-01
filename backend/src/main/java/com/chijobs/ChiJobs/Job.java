@@ -1,6 +1,10 @@
 package com.chijobs.ChiJobs;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 public class Job {
+
+    @JsonProperty("jobId")
     private String jobid;
     private String title;
     private String company;
