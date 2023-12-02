@@ -19,6 +19,7 @@ OPENAI_TOKEN="Openai_token"
 ```
 /frontend.env
 REACT_APP_NEO4JPASS="Neo4j password"
+REACT_APP_GEOAPI="make an account at https://www.geonames.org/export/web-services.html and use the username here"
 ```
 ### For Selenium to work:
 - Download Chromedriver (ver 119) and save the chromedriver.exe filepath.
