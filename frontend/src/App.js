@@ -11,6 +11,7 @@ import Profile from './pages/Profile';
 import Recommend from './pages/Recommend';
 import Register from './pages/Register';
 import Results from './pages/Results';
+import Report from './pages/Report';
 
 // import "./server";
 
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="/results" element={<Results />}></Route>
         <Route path="/recommend" element={<Recommend />}/>
         <Route path="/profile" element={<Profile />}/>
+        <Route path="/report" element={<Report />}/>
       </Routes>
       </UserProvider>
     </BrowserRouter>

@@ -12,6 +12,7 @@ import java.util.Map;
 
 import com.chijobs.ChiJobs.Application;
 import com.chijobs.ChiJobs.Job;
+import com.chijobs.ChiJobs.SearchTerm;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -112,6 +113,25 @@ public class MySQLDatabase {
         }
         return topQueries;
     }
+
+    public static List<SearchTerm> getAllQueries() throws SQLException {
+        String sql = "SELECT query, count FROM query_time ORDER BY count DESC";
+        List<SearchTerm> topQueries = new ArrayList<>();
+    
+        try (Connection conn = connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery()) {
+    
+            while (rs.next()) {
+                String query = rs.getString("query");
+                String count = rs.getString("count");
+                topQueries.add(new SearchTerm(query, Integer.parseInt(count)));
+            }
+        }
+        return topQueries;
+    }
+
+
     
 
     public static String addUser(String firsName, String lastName, String email, String password) throws SQLException {
