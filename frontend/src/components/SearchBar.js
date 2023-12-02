@@ -9,6 +9,8 @@ export default function SearchBar() {
     const [allJobTitles, setAllJobTitles] = useState([]);
     const [suggestions, setSuggestions] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [isZipCodeFetched, setIsZipCodeFetched] = useState(false);
+
 
     useEffect(() => {
         fetchAllJobTitles();
@@ -23,13 +25,21 @@ export default function SearchBar() {
         }
     };
 
-    const fetchZipCode = async (lat, lng, callback) => {
+    useEffect(() => {
+        if (zipcode && isZipCodeFetched) {
+            handleSearch();
+            setIsZipCodeFetched(false); // Reset the flag
+        }
+    }, [zipcode, isZipCodeFetched]);
+
+    const fetchZipCode = async (lat, lng) => {
         const username = process.env.REACT_APP_GEOAPI; 
         try {
             const response = await axios.get(`http://api.geonames.org/findNearbyPostalCodesJSON?lat=${lat}&lng=${lng}&username=${username}`);
             if (response.data.postalCodes.length > 0) {
                 setZipcode(response.data.postalCodes[0].postalCode);
-                callback(); 
+                setIsZipCodeFetched(true); 
+                console.log(response.data.postalCodes[0].postalCode);
             } else {
                 console.error('No postal codes found');
             }
@@ -41,7 +51,7 @@ export default function SearchBar() {
     const handleNearMeClick = () => {
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                fetchZipCode(position.coords.latitude, position.coords.longitude, handleSearch);
+                fetchZipCode(position.coords.latitude, position.coords.longitude);
             },
             (error) => console.error(error),
             { enableHighAccuracy: true }
@@ -50,6 +60,7 @@ export default function SearchBar() {
 
     const handleSearch = async () => {
         setLoading(true);
+        console.log("zipcode: " + zipcode);
         try {
             const res = await axios.get('http://localhost:8090/searchJobs', {
                 params: { keyword: keywords, zipcode: zipcode }
