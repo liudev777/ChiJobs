@@ -24,6 +24,31 @@ export default function SearchBar() {
         }
     };
 
+    const fetchZipCode = async (lat, lng, callback) => {
+        const username = process.env.REACT_APP_GEOAPI; // Ensure this is set in your .env file
+        try {
+            const response = await axios.get(`http://api.geonames.org/findNearbyPostalCodesJSON?lat=${lat}&lng=${lng}&username=${username}`);
+            if (response.data.postalCodes.length > 0) {
+                setZipcode(response.data.postalCodes[0].postalCode);
+                callback(); // Call the callback function after setting the zip code
+            } else {
+                console.error('No postal codes found');
+            }
+        } catch (error) {
+            console.error('Error fetching postal code:', error);
+        }
+    };
+    
+    const handleNearMeClick = () => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                fetchZipCode(position.coords.latitude, position.coords.longitude, handleSearch);
+            },
+            (error) => console.error(error),
+            { enableHighAccuracy: true }
+        );
+    };
+
     const handleSearch = async () => {
         setLoading(true);
         try {
@@ -74,7 +99,6 @@ export default function SearchBar() {
                     value={keywords}
                     onChange={handleKeywordChange}
                 />
-                {/* Display suggestions only if there are suggestions and the input is not empty */}
                 {suggestions.length > 0 && keywords.trim() !== '' && (
                     <ul className="suggestions-list">
                         {suggestions.map((suggestion, index) => (
@@ -96,6 +120,12 @@ export default function SearchBar() {
                 onClick={handleSearch}
             >
                 Search Job
+            </button>
+            <button
+                style={{ margin: "10px" }}
+                onClick={handleNearMeClick}
+            >
+                Near Me
             </button>
         </div>
     );
