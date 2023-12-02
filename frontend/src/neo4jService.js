@@ -1,8 +1,10 @@
 import neo4j from 'neo4j-driver';
 
+const NEO4JPASS = process.env.REACT_APP_NEO4JPASS;
+
 const driver = neo4j.driver(
     'bolt://localhost:7687',
-    neo4j.auth.basic('your_username', 'your_password')
+    neo4j.auth.basic('neo4j', NEO4JPASS)
 );
 
 const neo4jService = {

@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chijobs.ChiJobs.SearchTerm;
 import com.chijobs.ChiJobs.database.MySQLDatabase;
 import com.chijobs.ChiJobs.model.IndeedScrapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @RestController
@@ -25,6 +27,19 @@ public class QueryController {
             return ResponseEntity.ok(topQueries);
         } catch (SQLException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/getTrend")
+    public String getTrend() {
+        try {
+            List<SearchTerm> allQueries = MySQLDatabase.getAllQueries();
+            ObjectMapper mapper = new ObjectMapper();
+            String jsonString = mapper.writeValueAsString(allQueries);
+            System.out.println(jsonString);
+            return jsonString;
+        } catch (Exception e) {
+            return "";
         }
     }
 }

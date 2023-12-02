@@ -7,9 +7,12 @@ import SearchBar from "../components/SearchBar";
 import TrendingKeywords from "../components/TrendingKeywords";
 import neo4jService from '../neo4jService';
 import Recommend from './Recommend';
+import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
     const [applications, setApplications] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -36,11 +39,23 @@ export default function Home() {
         fetchData();
     }, []);
 
+    const handleClick = async () => {
+        setLoading(true);
+        try {
+            const res = await axios.get('http://localhost:8090/getTrend');
+            navigate('/report', { state: { data: res.data, loading: false } });
+        } catch (error) {
+            console.error('Error fetching data: ', error);
+            setLoading(false);
+        }
+      };
+
     return (
         <div className="App">
         <Header />
         <SearchBar />
         <Recommend />
+        <button onClick={handleClick}>Report</button>
         <TrendingKeywords />
         <Footer />
         </div>
