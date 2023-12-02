@@ -38,7 +38,7 @@ export default function Profile() {
                 <ul>
                     {appliedJobs.map(job => (
                         <li key={job.jobId}>
-                            <Link to={`/jobs/${job.jobid}`}>{job.title} - {job.company}</Link>
+                            <Link to={`/jobs/${job.jobId}`}>{job.title} - {job.company}</Link>
                         </li>
                     ))}
                 </ul>
@@ -48,8 +48,8 @@ export default function Profile() {
                 <h3>Bookmarked Jobs</h3>
                 <ul>
                     {bookmarkedJobs.map(job => (
-                        <li key={job.jobid}>
-                            <Link to={`/jobs/${job.jobid}`}>{job.title} - {job.company}</Link>
+                        <li key={job.jobId}>
+                            <Link to={`/jobs/${job.jobId}`}>{job.title} - {job.company}</Link>
                         </li>
                     ))}
                 </ul>
