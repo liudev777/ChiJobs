@@ -1,28 +1,15 @@
- 1. How many total lines of code written?
-
-                              2. What are the features  (including required assignments features) implemented and functional in your project?
-
-                                             2.1 User Account/Profile/Transaction management & MySQL
-
-                                             2.2 Recommender
-
-                                             2.3 Twitter matches
-
-                                             2.4 Analytics & Visual Reports                                
-
-                                             2.5 Reviews & Trending & MongoDB
-
-                                             2.6 Auto-Complete Search feature
-
-                                             2.7 Google MAPS - Near ME search feature
-
-                                             2.8 Knowledge Graph Searches
-
- 
-
-                              3. What are the Assignments features that are NOT implemented?
-
-                              4. What are the Assignments features that are attempted but NOT functional?
+1. How many total lines of code written?
+2. What are the features  (including required assignments features) implemented and functional in your project?
+  2.1 User Account/Profile/Transaction management & MySQL
+  2.2 Recommender
+  2.3 Twitter matches
+  2.4 Analytics & Visual Reports                                
+  2.5 Reviews & Trending & MongoDB
+  2.6 Auto-Complete Search feature
+  2.7 Google MAPS - Near ME search feature
+  2.8 Knowledge Graph Searches
+3. What are the Assignments features that are NOT implemented?
+4. What are the Assignments features that are attempted but NOT functional?
 
 ---
 ## Getting Started:
