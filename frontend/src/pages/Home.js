@@ -8,7 +8,6 @@ import TrendingKeywords from "../components/TrendingKeywords";
 import neo4jService from '../neo4jService';
 import Recommend from './Recommend';
 import { useNavigate } from 'react-router-dom';
-import NearbySearch from '../components/NearbySearch';
 
 export default function Home() {
       
