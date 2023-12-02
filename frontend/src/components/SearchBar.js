@@ -11,7 +11,6 @@ export default function SearchBar() {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        // Fetch all job titles when the component mounts
         fetchAllJobTitles();
     }, []);
 
@@ -25,12 +24,12 @@ export default function SearchBar() {
     };
 
     const fetchZipCode = async (lat, lng, callback) => {
-        const username = process.env.REACT_APP_GEOAPI; // Ensure this is set in your .env file
+        const username = process.env.REACT_APP_GEOAPI; 
         try {
             const response = await axios.get(`http://api.geonames.org/findNearbyPostalCodesJSON?lat=${lat}&lng=${lng}&username=${username}`);
             if (response.data.postalCodes.length > 0) {
                 setZipcode(response.data.postalCodes[0].postalCode);
-                callback(); // Call the callback function after setting the zip code
+                callback(); 
             } else {
                 console.error('No postal codes found');
             }
@@ -66,26 +65,21 @@ export default function SearchBar() {
         const input = e.target.value;
         setKeywords(input);
 
-        // Clear suggestions if input is empty
         if (input.trim() === '') {
             setSuggestions([]);
             return;
         }
 
-        // Filter job titles based on input locally
         const filteredSuggestions = allJobTitles.filter(
             (title) => title.toLowerCase().includes(input.toLowerCase())
         );
 
-        // Update the suggestions
         setSuggestions(filteredSuggestions);
     };
 
     const handleSuggestionClick = (suggestion) => {
-        // Set the selected suggestion as the input value
         setKeywords(suggestion);
 
-        // Clear the suggestions
         setSuggestions([]);
     };
 

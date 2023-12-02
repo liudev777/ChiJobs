@@ -39,10 +39,6 @@ public class MySQLDatabase {
                     jobDetails.get("description"), keywords);
         }
 
-        // // 3. Link the job with the query in query_jobs table
-        // for (String jobId : jobList.keySet()) {
-        // addQueryAndJob(keywords, jobId);
-        // }
     }
 
     public static void addScrapedJobsToDatabase(Map<String, Map<String, String>> scrapedJobs, String query)
@@ -74,7 +70,6 @@ public class MySQLDatabase {
                 PreparedStatement jobStmt = conn.prepareStatement(jobSql);
                 PreparedStatement queryJobStmt = conn.prepareStatement(queryJobSql)) {
 
-            // Add job or update if it already exists
             jobStmt.setString(1, jobId);
             jobStmt.setString(2, jobTitle);
             jobStmt.setString(3, company);
@@ -82,7 +77,6 @@ public class MySQLDatabase {
             jobStmt.setString(5, description);
             jobStmt.executeUpdate();
 
-            // Link job to query
             queryJobStmt.setString(1, query);
             queryJobStmt.setString(2, jobId);
             queryJobStmt.executeUpdate();
@@ -277,7 +271,6 @@ public class MySQLDatabase {
             unbookmarkStmt.setString(1, email);
             unbookmarkStmt.setString(2, jobId);
 
-            // Execute update
             int rowsAffected = unbookmarkStmt.executeUpdate();
             if (rowsAffected > 0) {
                 return "Job unbookmarked successfully";
@@ -299,7 +292,6 @@ public class MySQLDatabase {
             checkBookmarkStatusStmt.setString(1, email);
             checkBookmarkStatusStmt.setString(2, jobId);
 
-            // Execute query
             try (ResultSet resultSet = checkBookmarkStatusStmt.executeQuery()) {
                 if (resultSet.next()) {
                     int count = resultSet.getInt(1);
@@ -338,7 +330,7 @@ public class MySQLDatabase {
             }
         } catch (Exception e) {
             System.out.println("Error in getBookmarkedJobs: " + e.getMessage());
-            throw e; // Rethrow the exception to handle it externally
+            throw e; 
         }
 
         return bookmarkedJobs;

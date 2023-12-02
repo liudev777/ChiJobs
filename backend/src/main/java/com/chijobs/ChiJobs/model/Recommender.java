@@ -43,10 +43,8 @@ public class Recommender {
         
         jsonPayload.put("messages", messages);
 
-        // Create request body
         RequestBody body = RequestBody.create(jsonPayload.toString(), MediaType.get("application/json"));
 
-        // Build request
         Request request = new Request.Builder()
                 .url("https://api.openai.com/v1/chat/completions")
                 .addHeader("Content-Type", "application/json")
@@ -54,7 +52,6 @@ public class Recommender {
                 .post(body)
                 .build();
 
-        // Execute request and handle response
         try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
@@ -66,11 +63,9 @@ public class Recommender {
         // Parse the JSON response
         JSONObject responseObject = new JSONObject(jsonResponse);
 
-        // Navigate to the 'choices' array and then to the 'content' of the first choice
         JSONArray choicesArray = responseObject.getJSONArray("choices");
         String content = choicesArray.getJSONObject(0).getJSONObject("message").getString("content");
 
-        // Split the content into individual job titles and create a list
         List<String> jobTitles = new ArrayList<>(Arrays.asList(content.split(", ")));
 
         return jobTitles;

@@ -21,7 +21,6 @@ const SessionChecker = () => {
             }
         } catch (error) {
             console.error('Error checking session:', error);
-            // Handle error if necessary
         }
         };
 
